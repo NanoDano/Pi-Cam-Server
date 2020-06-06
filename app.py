@@ -30,7 +30,7 @@ from socket import gethostname
 @app.route('/', methods=['POST', 'GET'])
 def index():
     if request.method == 'GET':
-        return render_template('index.html', {'hostname': gethostname()})
+        return render_template('index.html', context={'hostname': gethostname()})
     now = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
     with PiCamera() as camera:
         camera.annotate_background = Color('green')
