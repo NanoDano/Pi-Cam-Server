@@ -1,5 +1,5 @@
-#!/usr/bin/python3
-import os
+#!/usr/bin/python
+from os import environ
 import datetime
 from flask import Flask, render_template, request
 from picamera import PiCamera, Color, exc
@@ -38,7 +38,7 @@ def index():
         image_url = f'image-{now}.jpg'
         try:
             camera.capture(IMAGE_DIR + image_url, quality=15)
-        except exc.PiCameraMMALError as e:
+        except exc.PiCameraMMALError:
             time.sleep(2)
             try:
                 camera.capture(IMAGE_DIR + image_url, quality=15)
