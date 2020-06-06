@@ -16,7 +16,7 @@ logging.info('Initializing Pi Cam Server')
 logging.info(f'Image directory: {STATIC_IMAGE_DIR}')
 
 
-app = Flask(__name__, static_folder=STATIC_IMAGE_DIR)
+app = Flask(__name__)
 
 # Pi Cam v1 - 2592 × 1944
 # Pi Cam v2 - 3280 × 2464
