@@ -1,19 +1,15 @@
-# Python Flask Template
+# Raspberry Pi Camera Webserver
+
+Features:
+
+- Show image from current camera view
+- Stores image on disk
+- Show links to old pictures taken
+- Show disk space usage
+- Button to allow deleting
 
 
-## Setup
+Example systemd config to run it with gunicorn or uwsgi
 
-Install the Python dependencies needed from `requirements.txt`.
-
-```bash
-pip install -r requirements.txt
 ```
-
-## Run the app
-
-You can run the app directly by executing `app.py`.
-
-```bash
-python app.py
 ```
-
