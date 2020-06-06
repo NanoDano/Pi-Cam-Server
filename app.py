@@ -2,19 +2,21 @@
 from os import environ
 import datetime
 from flask import Flask, render_template, request
-from picamera import PiCamera, Color, exc
+from socket import gethostname
 import time
-
-IMAGE_DIR = environ.get('IMAGE_DIR')
-if not IMAGE_DIR:
-    #raise Exception('No IMAGE_DIR in .env file or environment variables.')
-    IMAGE_DIR = '/home/pi/Pi-Cam-Server/static/'
+from picamera import PiCamera, Color, exc
+import logging
 
 
+STATIC_IMAGE_DIR = '/home/pi/Pi-Cam-Server/static/'
 
-# Default static files dir: static/
-# Default templates dir: templates/
-app = Flask(__name__)
+
+logging.basicConfig(level=logging.INFO)
+logging.info('Initializing Pi Cam Server')
+logging.info(f'Image directory: {STATIC_IMAGE_DIR}')
+
+
+app = Flask(__name__, static_folder=STATIC_IMAGE_DIR)
 
 # Pi Cam v1 - 2592 × 1944
 # Pi Cam v2 - 3280 × 2464
@@ -25,7 +27,8 @@ app = Flask(__name__)
 # none, negative, solarize, sketch, denoise, emboss, oilpaint, hatch, gpen,
 # pastel, watercolor, film, blur, saturation, colorswap, washedout, posterise,
 # colorpoint, colorbalance, cartoon, deinterlace1, and deinterlace2. The default is none.
-from socket import gethostname
+
+
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
@@ -37,11 +40,11 @@ def index():
         camera.annotate_text = now
         image_url = f'image-{now}.jpg'
         try:
-            camera.capture(IMAGE_DIR + image_url, quality=15)
+            camera.capture(STATIC_IMAGE_DIR + image_url, quality=15)
         except exc.PiCameraMMALError:
             time.sleep(2)
             try:
-                camera.capture(IMAGE_DIR + image_url, quality=15)
+                camera.capture(STATIC_IMAGE_DIR + image_url, quality=15)
             except Exception as e:
                 return '<html><body>Error fetching image twice in a row. Try again. <form method="POST"><button type="submit">Get picture</button></form></body></html>'
 

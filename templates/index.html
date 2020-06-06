@@ -1,5 +1,10 @@
 {% extends "base.html" %}
+
 {% block body %}
-<h1>Pi Cam - {{ hostname }}</h1>
-<form method="POST"><button type="submit">Get picture</button></form>
+
+    <h1>Pi Cam - {{ hostname }}</h1>
+    <form method="POST">
+        <button type="submit">Get picture</button>
+    </form>
+
 {% endblock %}
