@@ -21,7 +21,9 @@ app = Flask(__name__)
 #app.add_url_rule('/favicon.ico', redirect('/static/favicon.png'))  # url_for('static', filename='favicon.png'))
 
 @app.route('/delete')
-def delete_image(image_path):
+def delete_image():
+    image_path = request.args.get('image_path')
+    app.logger.info(image_path)
     remove(join(STATIC_IMAGE_DIR, image_path))
     return redirect(url_for('home'))
 
