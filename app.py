@@ -15,7 +15,7 @@ logging.info(f'Image directory: {STATIC_IMAGE_DIR}')
 
 app = Flask(__name__)
 
-app.add_url_rule('/favicon.ico', redirect('/static/favicon.png'))  # url_for('static', filename='favicon.png'))
+#app.add_url_rule('/favicon.ico', redirect('/static/favicon.png'))  # url_for('static', filename='favicon.png'))
 
 
 @app.route('/', methods=['POST', 'GET'])
@@ -23,7 +23,7 @@ def index():
     if request.method == 'GET':
         hostname = gethostname()
         print(f'hostname: {hostname}')
-        return render_template('index.html', context={'hostname': hostname})
+        return render_template('index.html', hostname=hostname)
     now = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
     with PiCamera() as camera:
         camera.annotate_background = Color('green')
