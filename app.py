@@ -11,7 +11,7 @@ import time
 from picamera import PiCamera, Color, exc
 import logging
 
-STATIC_IMAGE_DIR = '/home/pi/Pi-Cam-Server/static'
+STATIC_IMAGE_DIR = '/home/pi/Pi-Cam-Server/static/'
 
 logging.basicConfig(level=logging.INFO)
 logging.info('Initializing Pi Cam Server')
@@ -22,7 +22,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['POST', 'GET'])
 def home():
-    images = glob(STATIC_IMAGE_DIR + "/*.jpg")
+    images = glob(STATIC_IMAGE_DIR + "*.jpg")
     images.sort(key=getmtime, reverse=True)  # Newest on top
     images = map(lambda i: basename(i), images)
     hostname = gethostname()
