@@ -2,8 +2,8 @@
 
 Features:
 
-- Show image from current camera view
-- Stores image on disk
+x Show image from current camera view
+x Stores image on disk
 - Show links to old pictures taken
 - Show disk space usage
 - Button to allow deleting

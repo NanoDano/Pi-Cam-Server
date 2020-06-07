@@ -1,6 +1,9 @@
 #!/usr/bin/python
+from glob import glob
 from os import environ
 import datetime
+from os.path import getmtime
+
 from flask import Flask, render_template, request, url_for, redirect
 from socket import gethostname
 import time
@@ -20,10 +23,14 @@ app = Flask(__name__)
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
+    images = glob(STATIC_IMAGE_DIR + "*.jpg")
+    # Oldest files are at the front. Newest files at the end
+    images.sort(key=getmtime, reverse=True)
+
     if request.method == 'GET':
         hostname = gethostname()
         print(f'hostname: {hostname}')
-        return render_template('index.html', hostname=hostname)
+        return render_template('index.html', hostname=hostname, images=images)
     now = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
     with PiCamera() as camera:
         camera.annotate_background = Color('green')

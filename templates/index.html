@@ -7,4 +7,14 @@
         <button type="submit">Get picture</button>
     </form>
 
+
+    <div>
+        <h2>Images</h2>
+        </ul>
+        {% for image in images %}
+            <li><a href="{{ url_for('static', image) }}"></a></li>
+        {% endfor %}
+        </ul>
+    </div>
+
 {% endblock %}
