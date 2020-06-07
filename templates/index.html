@@ -13,13 +13,13 @@
         </div>
     {% endif %}
 
-    <div>
+    <pre>
         <h2>Disk Usage</h2>
-        <div style="font-face: monospace;">
-            {{ disk_usage[0] }}
+        <pre>
+            {{ disk_usage[0]|safe }}
 
-            {{ disk_usage[1] }}
-        </div>
+            {{ disk_usage[1]|safe }}
+        </pre>
     </div>
 
 
