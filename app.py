@@ -45,9 +45,6 @@ def get_disk_usage():
 
 @app.route('/', methods=['POST', 'GET'])
 def home():
-    get_disk_usage()
-    return 'test'
-
     hostname = gethostname()
 
     if request.method == 'GET':
