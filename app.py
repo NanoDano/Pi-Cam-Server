@@ -1,33 +1,21 @@
 #!/usr/bin/python
 from os import environ
 import datetime
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for, redirect
 from socket import gethostname
 import time
 from picamera import PiCamera, Color, exc
 import logging
 
-
 STATIC_IMAGE_DIR = '/home/pi/Pi-Cam-Server/static/'
-
 
 logging.basicConfig(level=logging.INFO)
 logging.info('Initializing Pi Cam Server')
 logging.info(f'Image directory: {STATIC_IMAGE_DIR}')
 
-
 app = Flask(__name__)
 
-# Pi Cam v1 - 2592 × 1944
-# Pi Cam v2 - 3280 × 2464
-# camera.resolution = (x, y)
-# camera.brightness = 50  # 0-100, Default: 50
-# You can use camera.image_effect to apply a particular image effect.
-# The options are:
-# none, negative, solarize, sketch, denoise, emboss, oilpaint, hatch, gpen,
-# pastel, watercolor, film, blur, saturation, colorswap, washedout, posterise,
-# colorpoint, colorbalance, cartoon, deinterlace1, and deinterlace2. The default is none.
-
+app.add_url_rule('/favicon.ico', redirect(url_for('static', filename='favicon.png')))
 
 
 @app.route('/', methods=['POST', 'GET'])
@@ -52,6 +40,9 @@ def index():
 
         return f'<html><body><form method="POST"><button type="submit">Get picture</button></form><img src="/static/image-{now}.jpg" /></body></html>'
     return 'Error'
+
+
+# {{ url_for 'static' 'downloads/test.zip' }}
 
 
 if __name__ == '__main__':
