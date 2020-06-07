@@ -2,7 +2,7 @@
 from glob import glob
 from os import environ
 import datetime
-from os.path import getmtime
+from os.path import getmtime, basename
 
 from flask import Flask, render_template, request, url_for, redirect
 from socket import gethostname
@@ -24,6 +24,7 @@ app = Flask(__name__)
 @app.route('/', methods=['POST', 'GET'])
 def index():
     images = glob(STATIC_IMAGE_DIR + "/*.jpg")
+    images = map(lambda i: basename(i), images)
     # Oldest files are at the front. Newest files at the end
     images.sort(key=getmtime, reverse=True)
 
