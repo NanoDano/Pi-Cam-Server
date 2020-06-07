@@ -1,8 +1,8 @@
 #!/usr/bin/python
 from glob import glob
-from os import environ
+from os import environ, remove
 import datetime
-from os.path import getmtime, basename
+from os.path import getmtime, basename, join
 
 from flask import Flask, render_template, request, url_for, redirect
 from socket import gethostname
@@ -20,9 +20,13 @@ app = Flask(__name__)
 
 #app.add_url_rule('/favicon.ico', redirect('/static/favicon.png'))  # url_for('static', filename='favicon.png'))
 
+@app.route('/delete')
+def delete_image(image_path):
+    remove(join(STATIC_IMAGE_DIR, image_path))
+    return redirect(url_for('home'))
 
 @app.route('/', methods=['POST', 'GET'])
-def index():
+def home():
     images = glob(STATIC_IMAGE_DIR + "/*.jpg")
     images.sort(key=getmtime, reverse=True)  # Newest on top
     images = map(lambda i: basename(i), images)
