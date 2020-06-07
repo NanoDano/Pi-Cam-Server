@@ -20,16 +20,24 @@ logging.info(f'Image directory: {STATIC_IMAGE_DIR}')
 app = Flask(__name__)
 
 
-@app.route('/', methods=['POST', 'GET'])
-def home():
+def get_image_list():
+    """
+    :return: List of image names sorted with newest first
+    """
     images = glob(STATIC_IMAGE_DIR + "*.jpg")
     images.sort(key=getmtime, reverse=True)  # Newest on top
     images = map(lambda i: basename(i), images)
+    return images
+
+
+@app.route('/', methods=['POST', 'GET'])
+def home():
+
     hostname = gethostname()
 
     if request.method == 'GET':
         print(f'hostname: {hostname}')
-        return render_template('index.html', hostname=hostname, images=images)
+        return render_template('index.html', hostname=hostname, images=get_image_list())
 
     now = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
     with PiCamera() as camera:
@@ -44,7 +52,7 @@ def home():
                 camera.capture(STATIC_IMAGE_DIR + image_name, quality=15)
             except Exception as e:
                 app.logger.error('Error taking image.')
-    return render_template('index.html', hostname=hostname, images=images, image_name=image_name)
+    return render_template('index.html', hostname=hostname, images=get_image_list(), image_name=image_name)
 
 
 
