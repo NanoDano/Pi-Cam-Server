@@ -15,7 +15,7 @@ logging.info(f'Image directory: {STATIC_IMAGE_DIR}')
 
 app = Flask(__name__)
 
-app.add_url_rule('/favicon.ico', redirect('/static/favicon.png')  # url_for('static', filename='favicon.png'))
+app.add_url_rule('/favicon.ico', redirect('/static/favicon.png'))  # url_for('static', filename='favicon.png'))
 
 
 @app.route('/', methods=['POST', 'GET'])
