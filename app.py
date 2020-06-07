@@ -3,6 +3,7 @@ from glob import glob
 from os import environ, remove
 import datetime
 from os.path import getmtime, basename, join
+from urllib.parse import unquote
 
 from flask import Flask, render_template, request, url_for, redirect
 from socket import gethostname
@@ -22,7 +23,7 @@ app = Flask(__name__)
 
 @app.route('/delete')
 def delete_image():
-    image_path = request.args.get('image_path')
+    image_path = unquote(request.args.get('image_path'))
     app.logger.info(image_path)
     remove(join(STATIC_IMAGE_DIR, image_path))
     return redirect(url_for('home'))
