@@ -3,6 +3,7 @@ from glob import glob
 from os import environ, remove
 import datetime
 from os.path import getmtime, basename, join
+from subprocess import Popen, PIPE
 from urllib.parse import unquote
 
 from flask import Flask, render_template, request, url_for, redirect
@@ -10,6 +11,8 @@ from socket import gethostname
 import time
 from picamera import PiCamera, Color, exc
 import logging
+
+
 
 STATIC_IMAGE_DIR = '/home/pi/Pi-Cam-Server/static/'
 
@@ -30,14 +33,26 @@ def get_image_list():
     return images
 
 
+def get_disk_usage():
+    du = Popen(['du', '-h', STATIC_IMAGE_DIR], stdout=PIPE)
+    du_output = du.communicate()[0].decode('utf8').replace('\n', '<br />')
+
+    df = Popen(["df", "-h"], stdout=PIPE)
+    df_output = df.communicate()[0].decode('utf8').replace('\n', '<br />')
+
+    return du_output, df_output
+
+
 @app.route('/', methods=['POST', 'GET'])
 def home():
+    get_disk_usage()
+    return 'test'
 
     hostname = gethostname()
 
     if request.method == 'GET':
         print(f'hostname: {hostname}')
-        return render_template('index.html', hostname=hostname, images=get_image_list())
+        return render_template('index.html', hostname=hostname, images=get_image_list(), disk_usage=get_disk_usage())
 
     now = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
     with PiCamera() as camera:
@@ -52,7 +67,7 @@ def home():
                 camera.capture(STATIC_IMAGE_DIR + image_name, quality=15)
             except Exception as e:
                 app.logger.error('Error taking image.')
-    return render_template('index.html', hostname=hostname, images=get_image_list(), image_name=image_name)
+    return render_template('index.html', hostname=hostname, images=get_image_list(), image_name=image_name, disk_usage=get_disk_usage())
 
 
 
