@@ -14,14 +14,14 @@
     {% endif %}
 
     <div>
-    <h2>Disk Usage</h2>
-    <pre>
-        {{ disk_usage[0] }}
-    </pre>
-    <pre>
-        {{ disk_usage[1] }}
-    </pre>
+        <h2>Disk Usage</h2>
+        <div style="font-face: monospace;">
+            {{ disk_usage[0] }}
+
+            {{ disk_usage[1] }}
+        </div>
     </div>
+
 
     <div>
         <h2>Images</h2>
