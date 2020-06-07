@@ -4,7 +4,7 @@ Features:
 
 x Show image from current camera view
 x Stores image on disk
-- Show links to old pictures taken
+x Show links to old pictures taken
 - Show disk space usage
 - Button to allow deleting
 
