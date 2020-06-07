@@ -19,7 +19,34 @@ logging.info(f'Image directory: {STATIC_IMAGE_DIR}')
 
 app = Flask(__name__)
 
-#app.add_url_rule('/favicon.ico', redirect('/static/favicon.png'))  # url_for('static', filename='favicon.png'))
+
+@app.route('/', methods=['POST', 'GET'])
+def home():
+    images = glob(STATIC_IMAGE_DIR + "/*.jpg")
+    images.sort(key=getmtime, reverse=True)  # Newest on top
+    images = map(lambda i: basename(i), images)
+    hostname = gethostname()
+
+    if request.method == 'GET':
+        print(f'hostname: {hostname}')
+        return render_template('index.html', hostname=hostname, images=images)
+
+    now = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
+    with PiCamera() as camera:
+        camera.annotate_background = Color('green')
+        camera.annotate_text = now
+        image_name = f'image-{now}.jpg'
+        try:
+            camera.capture(STATIC_IMAGE_DIR + image_name, quality=15)
+        except exc.PiCameraMMALError:
+            time.sleep(2)
+            try:
+                camera.capture(STATIC_IMAGE_DIR + image_name, quality=15)
+            except Exception as e:
+                app.logger.error('Error taking image.')
+    return render_template('index.html', hostname=hostname, images=images, image_name=image_name)
+
+
 
 @app.route('/delete')
 def delete_image():
@@ -27,37 +54,6 @@ def delete_image():
     app.logger.info(image_path)
     remove(join(STATIC_IMAGE_DIR, image_path))
     return redirect(url_for('home'))
-
-@app.route('/', methods=['POST', 'GET'])
-def home():
-    images = glob(STATIC_IMAGE_DIR + "/*.jpg")
-    images.sort(key=getmtime, reverse=True)  # Newest on top
-    images = map(lambda i: basename(i), images)
-
-    if request.method == 'GET':
-        hostname = gethostname()
-        print(f'hostname: {hostname}')
-        return render_template('index.html', hostname=hostname, images=images)
-    now = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
-    with PiCamera() as camera:
-        camera.annotate_background = Color('green')
-        camera.annotate_text = now
-        image_url = f'image-{now}.jpg'
-        try:
-            camera.capture(STATIC_IMAGE_DIR + image_url, quality=15)
-        except exc.PiCameraMMALError:
-            time.sleep(2)
-            try:
-                camera.capture(STATIC_IMAGE_DIR + image_url, quality=15)
-            except Exception as e:
-                return '<html><body>Error fetching image twice in a row. Try again. <form method="POST"><button type="submit">Get picture</button></form></body></html>'
-
-        return f'<html><body><form method="POST"><button type="submit">Get picture</button></form><img src="/static/image-{now}.jpg" /></body></html>'
-    return 'Error'
-
-
-# {{ url_for 'static' 'downloads/test.zip' }}
-
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=8080, debug=True)
