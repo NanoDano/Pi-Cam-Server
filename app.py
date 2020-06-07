@@ -24,9 +24,8 @@ app = Flask(__name__)
 @app.route('/', methods=['POST', 'GET'])
 def index():
     images = glob(STATIC_IMAGE_DIR + "/*.jpg")
+    images.sort(key=getmtime, reverse=True)  # Newest on top
     images = map(lambda i: basename(i), images)
-    # Oldest files are at the front. Newest files at the end
-    images.sort(key=getmtime, reverse=True)
 
     if request.method == 'GET':
         hostname = gethostname()
