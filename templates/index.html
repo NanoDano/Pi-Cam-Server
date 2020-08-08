@@ -25,6 +25,7 @@
 
     <div>
         <h2>Images</h2>
+        <p><a href="/delete-all" class="btn btn-primary">Delete all</a></p>
         </ul>
         {% for image in images %}
             <li><a href="{{ url_for('static', filename=image) }}">{{ image }}</a> (<a

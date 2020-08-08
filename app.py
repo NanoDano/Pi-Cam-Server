@@ -5,6 +5,7 @@ from glob import glob
 from os import remove
 import datetime
 from os.path import getmtime, basename, join
+from shutil import rmtree
 from subprocess import Popen, PIPE
 from urllib.parse import unquote
 from dotenv import load_dotenv
@@ -90,6 +91,11 @@ def delete_image():
     app.logger.info(image_path)
     remove(join(STATIC_IMAGE_DIR, image_path))
     return redirect(url_for('home'))
+
+
+@app.route('/delete-all')
+def delete_all_images():
+    rmtree(os.path.join(STATIC_IMAGE_DIR, "*"))
 
 
 if __name__ == '__main__':
