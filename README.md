@@ -32,8 +32,3 @@ At 5 minute intervals:
 - ~1 GB per day
 
 30 days = ~24GB
-
-## Example systemd config to run it with gunicorn or uwsgi
-
-```
-```

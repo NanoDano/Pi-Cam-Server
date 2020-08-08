@@ -1,26 +1,29 @@
 #!/usr/bin/python3
+import logging
 from glob import glob
 from os import environ, remove
 import datetime
 from os.path import getmtime, basename, join
 from subprocess import Popen, PIPE
 from urllib.parse import unquote
-
 from flask import Flask, render_template, request, url_for, redirect
 from socket import gethostname
 import time
-from picamera import PiCamera, Color, exc
-import logging
-
-
-
-STATIC_IMAGE_DIR = '/home/pi/Pi-Cam-Server/static/'
 
 logging.basicConfig(level=logging.INFO)
 logging.info('Initializing Pi Cam Server')
+
+try:
+    from picamera import PiCamera, Color, exc
+except ModuleNotFoundError:
+    logging.error('No picamera module found. Continuing without.')
+
+
+#STATIC_IMAGE_DIR = '/home/pi/Pi-Cam-Server/static/'
+STATIC_IMAGE_DIR = 'static'
 logging.info(f'Image directory: {STATIC_IMAGE_DIR}')
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/camserver/static')
 
 
 def get_image_list():
@@ -48,9 +51,9 @@ def home():
     hostname = gethostname()
 
     if request.method == 'GET':
-        print(f'hostname: {hostname}')
         return render_template('index.html', hostname=hostname, images=get_image_list(), disk_usage=get_disk_usage())
 
+    # POST method only gets this far
     now = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
     with PiCamera() as camera:
         camera.annotate_background = Color('green')
@@ -64,8 +67,8 @@ def home():
                 camera.capture(STATIC_IMAGE_DIR + image_name, quality=15)
             except Exception as e:
                 app.logger.error('Error taking image.')
-    return render_template('index.html', hostname=hostname, images=get_image_list(), image_name=image_name, disk_usage=get_disk_usage())
-
+    return render_template('index.html', hostname=hostname, images=get_image_list(), image_name=image_name,
+                           disk_usage=get_disk_usage())
 
 
 @app.route('/delete')
@@ -75,6 +78,7 @@ def delete_image():
     remove(join(STATIC_IMAGE_DIR, image_path))
     return redirect(url_for('home'))
 
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=8080, debug=True)
-    # app.run(ssl_context='adhoc', port=9999, host='localhost', debug=True)
+    # app.run(ssl_context='adhoc',  port=9999, host='localhost', debug=True)

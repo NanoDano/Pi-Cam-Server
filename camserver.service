@@ -1,0 +1,14 @@
+# /etc/systemd/system/camserver.service
+[Unit]
+Description=Pi Cam Server
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi
+ExecStart=/home/pi/Pi-Cam-Server/venv/bin/waitress-serve --listen=127.0.0.1:8002 app:app --url-prefix=/camserver
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
