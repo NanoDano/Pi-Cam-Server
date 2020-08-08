@@ -1,10 +1,10 @@
 body {
     background-color: #222222;
     color: #EEEEEE;
-    font-family: 'Indie Flower', serif;
 }
 h1, h2, h3, h4, h5, h6 {
     color: #00fbe1;
+    font-family: 'Indie Flower', serif;
 }
 pre {
     color: #EEEEEE;
