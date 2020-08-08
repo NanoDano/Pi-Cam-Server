@@ -2,7 +2,7 @@
 import logging
 import os
 from glob import glob
-from os import environ, remove
+from os import remove
 import datetime
 from os.path import getmtime, basename, join
 from subprocess import Popen, PIPE
@@ -20,17 +20,14 @@ except ModuleNotFoundError:
 
 # SETTINGS
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-load_dotenv(dotenv_path=os.path.join(BASE_DIR, '.env'))
 STATIC_IMAGE_DIR = os.path.join(BASE_DIR, 'static')
-STATIC_URL = environ['STATIC_URL']  # '/static/'  # or /camserver/static
 # CLOSE SETTING
 
 
-app = Flask(__name__, static_url_path=STATIC_URL)
+app = Flask(__name__)
 
 logging.info('Initializing Pi Cam Server')
 logging.info(f'Image directory: {STATIC_IMAGE_DIR}')
-logging.info(f'Static URL: {STATIC_URL}')
 
 
 def get_image_list():
@@ -64,7 +61,7 @@ def home():
                                disk_usage=get_disk_usage())
 
     # POST method only gets this far
-    now = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
+    now = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
     with PiCamera() as camera:
         camera.annotate_background = Color('green')
         camera.annotate_text = now
