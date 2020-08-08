@@ -7,3 +7,4 @@ static/image-*.jpg
 
 pushupdate
 .idea/
+.env
