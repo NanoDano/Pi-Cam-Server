@@ -5,10 +5,8 @@ from glob import glob
 from os import remove
 import datetime
 from os.path import getmtime, basename, join
-from shutil import rmtree
 from subprocess import Popen, PIPE
 from urllib.parse import unquote
-from dotenv import load_dotenv
 from flask import Flask, render_template, request, url_for, redirect
 from socket import gethostname
 import time
@@ -95,7 +93,9 @@ def delete_image():
 
 @app.route('/delete-all')
 def delete_all_images():
-    rmtree(os.path.join(STATIC_IMAGE_DIR, "*"))
+    for image in get_image_list():
+        remove(os.path.join(STATIC_IMAGE_DIR, image))
+    return redirect(url_for('home'))
 
 
 if __name__ == '__main__':
