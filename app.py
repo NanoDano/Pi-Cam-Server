@@ -34,7 +34,7 @@ def get_image_list():
     """
     :return: List of image names sorted with newest first
     """
-    images = glob(STATIC_IMAGE_DIR + "*.jpg")
+    images = glob(os.path.join(STATIC_IMAGE_DIR, "*.jpg"))
     images.sort(key=getmtime, reverse=True)  # Newest on top
     images = map(lambda i: basename(i), images)
     return images
