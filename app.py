@@ -70,11 +70,11 @@ def home():
         camera.annotate_text = now
         image_name = f'image-{now}.jpg'
         try:
-            camera.capture(STATIC_IMAGE_DIR + image_name, quality=15)
+            camera.capture(os.path.join(STATIC_IMAGE_DIR, image_name), quality=15)
         except exc.PiCameraMMALError:  # Sometimes the camera will already be in use from something else
             time.sleep(3)
             try:
-                camera.capture(STATIC_IMAGE_DIR + image_name, quality=15)
+                camera.capture((STATIC_IMAGE_DIR, image_name), quality=15)
             except Exception as e:
                 app.logger.error('Error taking image.')
     return render_template('index.html',
