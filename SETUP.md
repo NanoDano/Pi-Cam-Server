@@ -7,8 +7,7 @@
 cd /home/pi/
 git clone git@github.com:NanoDano/Pi-Cam-Server.git
 cd Pi-Cam-Server
-python3 -m venv venv
-venv/bin/pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 ## Setup WSGI server

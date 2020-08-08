@@ -7,7 +7,7 @@ After=network.target
 Type=simple
 User=pi
 WorkingDirectory=/home/pi/Pi-Cam-Server
-ExecStart=/home/pi/Pi-Cam-Server/venv/bin/waitress-serve --url-prefix=/camserver --listen=127.0.0.1:8002 app:app
+ExecStart=/usr/bin/python3 -m waitress --url-prefix=/camserver --listen=127.0.0.1:8002 app:app
 Restart=always
 
 [Install]
