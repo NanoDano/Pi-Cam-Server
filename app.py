@@ -15,8 +15,10 @@ import time
 logging.basicConfig(level=logging.INFO)
 try:
     from picamera import PiCamera, Color, exc
+    PI_CAMERA_AVAILABLE = True
 except ModuleNotFoundError:
     logging.error('No picamera module found. Continuing without.')
+    PI_CAMERA_AVAILABLE = False
 
 # SETTINGS
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -54,7 +56,8 @@ def get_disk_usage():
 def home():
     hostname = gethostname()
 
-    if request.method == 'GET':
+    # If there is no Pi camera available (local dev) always do simple GET returns.
+    if request.method == 'GET' or not PI_CAMERA_AVAILABLE:
         return render_template('index.html',
                                hostname=hostname,
                                images=get_image_list(),
